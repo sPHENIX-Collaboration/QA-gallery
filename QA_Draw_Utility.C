@@ -120,17 +120,17 @@ void SavePad(TPad *p)
     }
     else if (obj->IsA()->GetBaseClassOffset(TClass::GetClass("TH1")) >= 0)
     {
-      cout << "Save TH1 " << obj->GetName() << endl;
+      //cout << "Save TH1 " << obj->GetName() << endl;
       obj->Clone()->Write(obj->GetName(), TObject::kOverwrite);
     }
     else if (obj->IsA()->GetBaseClassOffset(TClass::GetClass("TF1")) >= 0)
     {
-      cout << "Save TF1 " << obj->GetName() << endl;
+      //cout << "Save TF1 " << obj->GetName() << endl;
       obj->Clone()->Write(obj->GetName(), TObject::kOverwrite);
     }
     else if (obj->IsA()->GetBaseClassOffset(TClass::GetClass("TGraph")) >= 0)
     {
-      cout << "Save TGraph " << obj->GetName() << endl;
+      //cout << "Save TGraph " << obj->GetName() << endl;
       obj->Clone()->Write(obj->GetName(), TObject::kOverwrite);
     }
   }
