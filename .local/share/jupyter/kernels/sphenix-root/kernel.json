@@ -1,0 +1,11 @@
+{
+ "language": "c++",
+ "display_name": "sPHENIX ROOT C++",
+ "argv": [
+  "/direct/phenix+u/jinhuang/.local/share/jupyter/kernels/sphenix-root/sphenix_setup.sh",
+  "-m",
+  "JupyROOT.kernel.rootkernel",
+  "-f",
+  "{connection_file}"
+ ]
+}
