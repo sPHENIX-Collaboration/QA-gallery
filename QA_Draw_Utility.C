@@ -234,7 +234,7 @@ double DrawReference(TH1 *hnew, TH1 *href, bool draw_href_error = false)
       href->Draw("HIST same");
     hnew->Draw("same");  // over lay data points
 
-    ks_test = hnew->KolmogorovTest(href, "D");
+    ks_test = hnew->KolmogorovTest(href, "");
   }
 
   // ---------------------------------
