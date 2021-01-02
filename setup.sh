@@ -38,7 +38,7 @@ else
 fi
 
 echo "-------------------------------------"
-echo "Env checks:"
+echo "Final virtual env checks:"
 echo "-------------------------------------"
 
 which python
