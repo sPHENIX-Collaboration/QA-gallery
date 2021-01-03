@@ -19,6 +19,6 @@ echo '-------------------------'
 echo 'Processing $nbname'
 echo '-------------------------'
 jupyter nbconvert --to notebook --inplace --execute --ExecutePreprocessor.kernel_name=python $nbname
-jupyter nbconvert --to html --template classic $nbname
+jupyter nbconvert --to html $nbname
 
 
