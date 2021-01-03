@@ -16,7 +16,7 @@ jupyter --version
 jupyter kernelspec list --json
  
 echo '-------------------------'
-echo 'Processing $nbname'
+echo "Processing $nbname"
 echo '-------------------------'
 jupyter nbconvert --to notebook --inplace --execute --ExecutePreprocessor.kernel_name=python $nbname
 jupyter nbconvert --to html $nbname
