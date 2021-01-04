@@ -35,7 +35,7 @@ jupyter --version
 jupyter kernelspec list     
 
 echo "-------------------------------------"
-echo "Done. To start jupyterlab server locally for devlopping:"
+echo "Done. To start jupyterlab server locally for developing the plots:"
 echo "source ./env/bin/activate && jupyter lab"
 echo "-------------------------------------"
 
