@@ -2,12 +2,18 @@
 
 Plotting macro and result gallery for standardized QA plots
 
+## QA branches
+
 The `main` branch carries common macros and utilities. And each QA plot setup is placed in their individual branches: 
 
 * [`QA-calorimeter-single-particle` branch](https://github.com/sPHENIX-Collaboration/QA-gallery/tree/QA-calorimeter-single-particle ) : Full detector Calorimeter QA for single particles 
 * Tracking branches to come...
 
 The plotting branches are automatically synced with the `main` branch via GitHub actions. 
+
+## Result plots
+
+The result by running these QA notebooks are archived by tags. Please find a list of recent runs at https://github.com/sPHENIX-Collaboration/QA-gallery/tags 
 
 # Developper's guide
 
