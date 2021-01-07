@@ -16,3 +16,21 @@ jobs:
           from_branch: main
           target_branch: QA-calorimeter-single-particle
           github_token: ${{ github.token }}
+
+      - name: Merge main -> QA-tracking-low-occupancy
+        uses: devmasx/merge-branch@v1.3.1
+        with:
+          type: now
+          from_branch: main
+          target_branch: QA-tracking-low-occupancy
+          github_token: ${{ github.token }}
+
+      - name: Merge QA-tracking-low-occupancy -> QA-tracking-high-occupancy
+        uses: devmasx/merge-branch@v1.3.1
+        with:
+          type: now
+          from_branch: QA-tracking-low-occupancy
+          target_branch: QA-tracking-high-occupancy
+          github_token: ${{ github.token }}
+
+
