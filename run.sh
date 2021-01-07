@@ -18,7 +18,15 @@ jupyter kernelspec list --json
 echo '-------------------------'
 echo "Processing $nbname"
 echo '-------------------------'
+
 jupyter nbconvert --to notebook --inplace --execute --ExecutePreprocessor.kernel_name=python $nbname
+if [ $build_ret -ne 0 ]; then
+	echo "======================================================="
+	echo "${nbname}: Failed build with return = ${build_ret}. ";
+	echo "======================================================="
+	exit $build_ret;
+fi
+
 jupyter nbconvert --to html $nbname
 
 
