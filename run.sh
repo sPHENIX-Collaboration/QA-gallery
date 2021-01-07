@@ -21,7 +21,7 @@ echo '-------------------------'
 
 jupyter nbconvert --to notebook --inplace --execute --ExecutePreprocessor.kernel_name=python $nbname
 
-build_ret=$?
+build_ret=$? 
 if [ $build_ret -ne 0 ]; then
 	echo "======================================================="
 	echo "${nbname}: Failed build with return = ${build_ret}. ";
