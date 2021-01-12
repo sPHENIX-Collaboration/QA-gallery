@@ -110,6 +110,10 @@ public:
   {
     return m_vecpValues.size();
   }
+  
+  const string make_summary_txt(const string & result_file);
+  TCanvas *  make_summary_TCanvas();
+  
  private:
   vector<double> m_vecpValues;
   TH1 *h_pValue = nullptr;
@@ -119,6 +123,59 @@ public:
 };
 
 KSTestSummary *KSTestSummary::instance = nullptr;
+
+
+const string KSTestSummary::make_summary_txt(const string & result_file)
+{
+    // const string result_file("QA-tracking.txt");
+    
+    fstream fs_result_file(result_file, ios_base::out);
+    
+    ostringstream soutput;
+    
+    cout <<"This notebook contains "<<KSTestSummary::getInstance()->get_nTest()<<" KSTets: ";
+    
+    soutput <<"combined Chi2/nDoF = "<< KSTestSummary::getInstance()->get_Combined_Chi2();
+    soutput <<" / "<<KSTestSummary::getInstance()-> get_Combined_NDF();
+    soutput <<", and combined __p-Value = "<<KSTestSummary::getInstance()->get_Combined_pValue()<<"__";
+    
+    cout << soutput.str()<<endl;
+    fs_result_file<< soutput.str();
+    
+    return soutput.str();
+}
+  
+TCanvas *  KSTestSummary::make_summary_TCanvas()
+{
+    
+    TCanvas *c1 = new TCanvas(TString("Summary") ,
+                            TString("Summary") ,
+                            1800, 1000);
+    c1->Divide(2, 1);
+    int idx = 1;
+    TPad *p;
+
+    if (KSTestSummary::getInstance()->get_h_pValue())
+    {
+        p = (TPad *) c1->cd(idx++);
+        c1->Update();
+        //p->SetLogy();
+
+        KSTestSummary::getInstance()->get_h_pValue()->DrawClone();
+    }
+
+    if (KSTestSummary::getInstance()->get_h_Log_pValue())
+    {
+        p = (TPad *) c1->cd(idx++);
+        c1->Update();
+        p->SetLogy();
+
+        KSTestSummary::getInstance()->get_h_Log_pValue()->DrawClone();
+    }
+    
+    return c1;    
+}
+
 
 //! Divide canvas in a given number of pads, with a number of pads in both directions that match the width/height ratio of the canvas
 void DivideCanvas(TVirtualPad *p, int npads)
