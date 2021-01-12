@@ -18,11 +18,13 @@
 #include <TSystem.h>
 
 #include <TGraphErrors.h>
+#include <TH1.h>
 #include <TH1F.h>
 #include <TList.h>
 #include <TObject.h>
 #include <TString.h>
 #include <TStyle.h>
+#include <TTMath.h>
 #include <TTree.h>
 
 #include <TLegend.h>
@@ -33,71 +35,129 @@
 #include <cassert>
 #include <cmath>
 #include <limits>
+#include <vector>
 
 #include <iostream>
 
 using namespace std;
 
-//! Divide canvas in a given number of pads, with a number of pads in both directions that match the width/height ratio of the canvas
-void DivideCanvas(TVirtualPad* p, int npads)
+class KSTestSummary
 {
-  if( !p ) return;
-  if( !npads ) return;
-  const double ratio = double(p->GetWw())/p->GetWh();
-  Int_t columns = std::max( 1, int(std::sqrt( npads*ratio )) );
-  Int_t rows = std::max( 1, int(npads/columns) );
-  while( rows * columns < npads )
+  static KSTestSummary *getInstance()
+  {
+    if (instance == nullptr)
+    {
+      instance = new KSTestSummary();
+    }
+    return instance;
+  }
+
+  KSTestSummary()
+  {
+    h_pValue = new TH1("h_pValue", "p-Value Summary;p-Value;Count of plots", 100, 0, 1);
+    h_Log_pValue = new TH1("h_Log_pValue", "Log p-Value Summary;Log[p-Value];Count of plots", 100, -10, 1);
+  }
+
+  void PushKSTest(const double pValue)
+  {
+    m_vecpValues.push_back(pValue);
+
+    h_pValue->Fill(pValue);
+    h_Log_pValue->Fill(log(pValue));
+  }
+
+  const vector<double> &get_vecpValues() const { return m_vecpValues; }
+  const TH1 *get_h_pValue() const { return h_pValue; }
+  const TH1 *get_h_Log_pValue() const { return h_Log_pValue; }
+
+  //! combined p-Value under Fisher's combined probability test
+  double get_Combined_pValue() const
+  {
+    return TMath::Prob(get_Combined_Chi2(), get_Combined_NDF());
+  }
+
+  //! combined Chi2 under Fisher's combined probability test
+  double get_Combined_Chi2() const
+  {
+    double Chi2(0);
+    for (auto &p_value : m_vecpValues)
+    {
+      Chi2 += log(p_value);
+    }
+    Chi2 *= -2;
+    return Chi2;
+  }
+
+  //! combined degree of freedom under Fisher's combined probability test
+  int get_Combined_NDF() const
+  {
+    return 2 * m_vecpValues.size();
+  }
+
+ private:
+  vector<double> m_vecpValues;
+  TH1 *h_pValue = nullptr;
+  TH1 *h_Log_pValue = nullptr;
+
+  static KSTestSummary *instance = nullptr;
+};
+
+//! Divide canvas in a given number of pads, with a number of pads in both directions that match the width/height ratio of the canvas
+void DivideCanvas(TVirtualPad *p, int npads)
+{
+  if (!p) return;
+  if (!npads) return;
+  const double ratio = double(p->GetWw()) / p->GetWh();
+  Int_t columns = std::max(1, int(std::sqrt(npads * ratio)));
+  Int_t rows = std::max(1, int(npads / columns));
+  while (rows * columns < npads)
   {
     columns++;
-    if( rows * columns < npads ) rows++;
+    if (rows * columns < npads) rows++;
   }
-  p->Divide( rows, columns );
+  p->Divide(rows, columns);
 }
 
 //! Draw a vertical line in a pad at given x coordinate
-TLine* VerticalLine( TVirtualPad* p, Double_t x )
+TLine *VerticalLine(TVirtualPad *p, Double_t x)
 {
-
   p->Update();
 
   Double_t yMin = p->GetUymin();
   Double_t yMax = p->GetUymax();
 
-  if( p->GetLogy() )
+  if (p->GetLogy())
   {
-    yMin = std::pow( 10, yMin );
-    yMax = std::pow( 10, yMax );
+    yMin = std::pow(10, yMin);
+    yMax = std::pow(10, yMax);
   }
 
-  TLine *line = new TLine( x, yMin, x, yMax );
-  line->SetLineStyle( 2 );
-  line->SetLineWidth( 1 );
-  line->SetLineColor( 1 );
+  TLine *line = new TLine(x, yMin, x, yMax);
+  line->SetLineStyle(2);
+  line->SetLineWidth(1);
+  line->SetLineColor(1);
   return line;
-
 }
 
 //! Draw a horizontal line in a pad at given x coordinate
-TLine* HorizontalLine( TVirtualPad* p, Double_t y )
+TLine *HorizontalLine(TVirtualPad *p, Double_t y)
 {
-
   p->Update();
 
   Double_t xMin = p->GetUxmin();
   Double_t xMax = p->GetUxmax();
 
-  if( p->GetLogx() )
+  if (p->GetLogx())
   {
-    xMin = std::pow( 10, xMin );
-    xMax = std::pow( 10, xMax );
+    xMin = std::pow(10, xMin);
+    xMax = std::pow(10, xMax);
   }
 
-  TLine *line = new TLine( xMin, y, xMax, y );
-  line->SetLineStyle( 2 );
-  line->SetLineWidth( 1 );
-  line->SetLineColor( 1 );
+  TLine *line = new TLine(xMin, y, xMax, y);
+  line->SetLineStyle(2);
+  line->SetLineWidth(1);
+  line->SetLineColor(1);
   return line;
-
 }
 
 //! Service function to SaveCanvas()
@@ -185,7 +245,7 @@ void SaveCanvas(TCanvas *c, TString name = "", Bool_t bEPS = kTRUE)
 
 //! Draw 1D histogram along with its reference as shade
 //! @param[in] draw_href_error whether to draw error band for reference plot. Otherwise, it is a filled histogram (default)
-double DrawReference(TH1 *hnew, TH1 *href, bool draw_href_error = false)
+double DrawReference(TH1 *hnew, TH1 *href, bool draw_href_error = false, bool do_kstest = true)
 {
   hnew->SetLineColor(kBlue + 3);
   hnew->SetMarkerColor(kBlue + 3);
@@ -234,7 +294,8 @@ double DrawReference(TH1 *hnew, TH1 *href, bool draw_href_error = false)
       href->Draw("HIST same");
     hnew->Draw("same");  // over lay data points
 
-    ks_test = hnew->KolmogorovTest(href, "");
+    if (do_kstest)
+      ks_test = hnew->KolmogorovTest(href, "");
   }
 
   // ---------------------------------
@@ -249,22 +310,36 @@ double DrawReference(TH1 *hnew, TH1 *href, bool draw_href_error = false)
     legend->AddEntry(href, Form("Reference"), "f");
     legend->Draw();
     legend = new TLegend(0.3, .86, 1, .93, NULL, "NB NDC");
-    TLegendEntry *le = legend->AddEntry(hnew, Form("New: KS-Test P=%.3f", ks_test), "lpe");
-    if (ks_test>=1)
-      le->SetTextColor(kBlue+1);
-    else if (ks_test>=.2)
-      le->SetTextColor(kGreen+2);
-    else if (ks_test>=.05)
-      le->SetTextColor(kYellow+1);
+
+    if (do_kstest)
+    {
+      TLegendEntry *le = legend->AddEntry(hnew, Form("New: KS-Test P=%.3f", ks_test), "lpe");
+      if (ks_test >= 1)
+        le->SetTextColor(kBlue + 1);
+      else if (ks_test >= .2)
+        le->SetTextColor(kGreen + 2);
+      else if (ks_test >= .05)
+        le->SetTextColor(kYellow + 1);
+      else
+        le->SetTextColor(kRed + 1);
+      legend->Draw();
+    }
     else
-      le->SetTextColor(kRed+1);
-    legend->Draw();
+    {
+      TLegendEntry *le = legend->AddEntry(hnew, Form("New Result"), "lpe");
+      legend->Draw();
+    }
   }
   else
   {
     gPad->SetTopMargin(.07);
     TLegend *legend = new TLegend(0, .93, 0, 1, hnew->GetTitle(), "NB NDC");
     legend->Draw();
+  }
+
+  if (do_kstest)
+  {
+    KSTestSummary::getInstance()->Push(ks_test);
   }
 
   return ks_test;
@@ -316,7 +391,6 @@ void DrawReference(TGraph *hnew, TGraph *href, bool draw_href_error = true)
     hnew->Draw("p e");  // over lay data points
   }
 
-
   // ---------------------------------
   // now, make summary header
   // ---------------------------------
@@ -338,7 +412,6 @@ void DrawReference(TGraph *hnew, TGraph *href, bool draw_href_error = true)
     TLegend *legend = new TLegend(0, .93, 0, 1, hnew->GetTitle(), "NB NDC");
     legend->Draw();
   }
-
 }
 
 //! Fit for resolution of TH2F
