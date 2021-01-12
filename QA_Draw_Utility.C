@@ -64,8 +64,14 @@ public:
     h_Log_pValue->SetFillColor(kBlue-2);
   }
 
-  void PushKSTest(const double pValue)
+  void PushKSTest(double pValue)
   {
+    if (pValue<=0)
+    {
+      cout <<"KSTestSummary::PushKSTest - Warning - received pValue = "<<pValue<<". Reset to an arbitary small non-zero value (e^(-15))"<<endl; 
+      pValue = exp(-15);
+    }
+    
     m_vecpValues.push_back(pValue);
 
     h_pValue->Fill(pValue);
