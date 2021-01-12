@@ -21,10 +21,10 @@
 #include <TH1.h>
 #include <TH1F.h>
 #include <TList.h>
+#include <TMath.h>
 #include <TObject.h>
 #include <TString.h>
 #include <TStyle.h>
-#include <TTMath.h>
 #include <TTree.h>
 
 #include <TLegend.h>
@@ -43,6 +43,7 @@ using namespace std;
 
 class KSTestSummary
 {
+public:
   static KSTestSummary *getInstance()
   {
     if (instance == nullptr)
@@ -54,8 +55,8 @@ class KSTestSummary
 
   KSTestSummary()
   {
-    h_pValue = new TH1("h_pValue", "p-Value Summary;p-Value;Count of plots", 100, 0, 1);
-    h_Log_pValue = new TH1("h_Log_pValue", "Log p-Value Summary;Log[p-Value];Count of plots", 100, -10, 1);
+    h_pValue = new TH1F("h_pValue", "p-Value Summary;p-Value;Count of plots", 100, 0, 1);
+    h_Log_pValue = new TH1F("h_Log_pValue", "Log p-Value Summary;Log[p-Value];Count of plots", 100, -10, 1);
   }
 
   void PushKSTest(const double pValue)
@@ -93,14 +94,20 @@ class KSTestSummary
   {
     return 2 * m_vecpValues.size();
   }
-
+  
+  int get_nTest() const
+  {
+    return m_vecpValues.size();
+  }
  private:
   vector<double> m_vecpValues;
   TH1 *h_pValue = nullptr;
   TH1 *h_Log_pValue = nullptr;
 
-  static KSTestSummary *instance = nullptr;
+  static KSTestSummary *instance;
 };
+
+KSTestSummary *KSTestSummary::instance = nullptr;
 
 //! Divide canvas in a given number of pads, with a number of pads in both directions that match the width/height ratio of the canvas
 void DivideCanvas(TVirtualPad *p, int npads)
@@ -339,7 +346,7 @@ double DrawReference(TH1 *hnew, TH1 *href, bool draw_href_error = false, bool do
 
   if (do_kstest)
   {
-    KSTestSummary::getInstance()->Push(ks_test);
+    KSTestSummary::getInstance()->PushKSTest(ks_test);
   }
 
   return ks_test;
