@@ -55,8 +55,13 @@ public:
 
   KSTestSummary()
   {
-    h_pValue = new TH1F("h_pValue", "p-Value Summary;p-Value;Count of plots", 100, 0, 1);
-    h_Log_pValue = new TH1F("h_Log_pValue", "Log p-Value Summary;Log[p-Value];Count of plots", 100, -10, 1);
+    h_pValue = new TH1F("h_pValue", "p-Value Summary;p-Value;Count of plots", 50, 0-1e-10, 1+1e-10);
+    h_Log_pValue = new TH1F("h_Log_pValue", "Log p-Value Summary;Log[p-Value];Count of plots", 50, -20, 1e-10);
+    
+    h_pValue->SetFillStyle(1);
+    h_pValue->SetFillColor(kBlue-2);
+    h_Log_pValue->SetFillStyle(1);
+    h_Log_pValue->SetFillColor(kBlue-2);
   }
 
   void PushKSTest(const double pValue)
