@@ -20,7 +20,7 @@ The result by running these QA notebooks are archived by tags. Please find a lis
 
 For base script and [`QA_Draw_Utility.C`](QA_Draw_Utility.C), please edit in the `main` branch. Then it will be automatically sync to other plotting branches via [GitHub Actions](https://github.com/sPHENIX-Collaboration/QA-gallery/actions)
 
-The plotting macros plot the default QA ROOT file via the sPHENIX Jupyter Lab environment. Both source code, documentation and result plots are saved in the Jupyter Notebook formats, such as [QA-calorimeter.ipynb](https://github.com/sPHENIX-Collaboration/QA-gallery/blob/QA-calorimeter-single-particle/QA-calorimeter.ipynb) and they can be best viewed via the `nbviewer` site ([example](http://nbviewer.ipython.org/github/sPHENIX-Collaboration/QA-gallery/blob/cb340543f08c4351fcf5787de1c495419ea2debd/QA-calorimeter.ipynb))
+In the plotting branches, the plotting macros plot the default QA ROOT file via the sPHENIX Jupyter Lab environment. Both source code, documentation and result plots are saved in the Jupyter Notebook formats, such as [QA-calorimeter.ipynb](https://github.com/sPHENIX-Collaboration/QA-gallery/blob/QA-calorimeter-single-particle/QA-calorimeter.ipynb) and they can be best viewed via the `nbviewer` site ([example](http://nbviewer.ipython.org/github/sPHENIX-Collaboration/QA-gallery/blob/cb340543f08c4351fcf5787de1c495419ea2debd/QA-calorimeter.ipynb))
 
 To edit the notebook, 
 1. Please checkout the plotting branches
