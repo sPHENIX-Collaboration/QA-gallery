@@ -6,8 +6,9 @@ Plotting macro and result gallery for standardized QA plots
 
 The `main` branch carries common macros and utilities. And each QA plot setup is placed in their individual branches: 
 
-* [`QA-calorimeter-single-particle` branch](https://github.com/sPHENIX-Collaboration/QA-gallery/tree/QA-calorimeter-single-particle ) : Full detector Calorimeter QA for single particles 
-* Tracking branches to come...
+* [`QA-calorimeter-single-particle` branch](https://github.com/sPHENIX-Collaboration/QA-gallery/tree/QA-calorimeter-single-particle ) : Full detector Calorimeter QA for single particles, designed to plot QA file from https://github.com/sPHENIX-Collaboration/macros/tree/QA-calorimeter-single-particle/detectors/sPHENIX
+* [`QA-tracking-low-occupancy` branch](https://github.com/sPHENIX-Collaboration/QA-gallery/tree/QA-tracking-low-occupancy ) : Tracking QA for low occupancy, designed to plot QA file from https://github.com/sPHENIX-Collaboration/macros/tree/QA-tracking-low-occupancy/detectors/sPHENIX
+* [`QA-tracking-high-occupancy` branch](https://github.com/sPHENIX-Collaboration/QA-gallery/tree/QA-tracking-high-occupancy ) : Tracking QA for high occupancy, designed to plot QA file from https://github.com/sPHENIX-Collaboration/macros/tree/QA-tracking-high-occupancy/detectors/sPHENIX
 
 The plotting branches are automatically synced with the `main` branch via GitHub actions. 
 
@@ -16,6 +17,8 @@ The plotting branches are automatically synced with the `main` branch via GitHub
 The result by running these QA notebooks are archived by tags. Please find a list of recent runs at https://github.com/sPHENIX-Collaboration/QA-gallery/tags 
 
 # Developper's guide
+
+For base script and [`QA_Draw_Utility.C`](QA_Draw_Utility.C), please edit in the `main` branch. Then it will be automatically sync to other plotting branches via [GitHub Actions](https://github.com/sPHENIX-Collaboration/QA-gallery/actions)
 
 The plotting macros plot the default QA ROOT file via the sPHENIX Jupyter Lab environment. Both source code, documentation and result plots are saved in the Jupyter Notebook formats, such as [QA-calorimeter.ipynb](https://github.com/sPHENIX-Collaboration/QA-gallery/blob/QA-calorimeter-single-particle/QA-calorimeter.ipynb) and they can be best viewed via the `nbviewer` site ([example](http://nbviewer.ipython.org/github/sPHENIX-Collaboration/QA-gallery/blob/cb340543f08c4351fcf5787de1c495419ea2debd/QA-calorimeter.ipynb))
 
