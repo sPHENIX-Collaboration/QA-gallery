@@ -41,6 +41,14 @@
 
 using namespace std;
 
+// Custom assert handling for clang interpreter
+#ifdef assert
+#undef assert
+#endif
+
+#define assert(cond) if (!cond) {cerr <<"Fatal Error: Assert of " <<#cond <<" is false. Exiting. \nError condition raised at "<< __FILE__<<" line "<< __LINE__<<" Function "<<__PRETTY_FUNCTION__<<endl; return;}
+
+// KSTest summary utilities
 class KSTestSummary
 {
 public:
