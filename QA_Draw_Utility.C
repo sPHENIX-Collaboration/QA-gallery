@@ -38,6 +38,7 @@
 #include <vector>
 
 #include <iostream>
+#include <stdexcept>
 
 using namespace std;
 
@@ -46,7 +47,8 @@ using namespace std;
 #undef assert
 #endif
 
-#define assert(cond) if (!cond) {cerr <<"Fatal Error: Assert of " <<#cond <<" is false. Exiting. \nError condition raised at "<< __FILE__<<" line "<< __LINE__<<" Function "<<__PRETTY_FUNCTION__<<endl; return;}
+#define assert(cond) if (!(cond)) {cerr <<"Fatal Error: Assertion of (" <<#cond <<") is false. Exiting. \nError condition raised at "<< __FILE__<<" line "<< __LINE__<<" Function "<<__PRETTY_FUNCTION__<<endl; throw runtime_error("Assertion Failure for expression: "+string(#cond));}
+
 
 // KSTest summary utilities
 class KSTestSummary
