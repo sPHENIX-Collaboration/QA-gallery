@@ -37,3 +37,5 @@ To edit the notebook,
 * sPHENIX JupyterLab runs locally on your local computer via [sPHENIX Singularity container](https://github.com/sPHENIX-Collaboration/Singularity). Please setup the [container](https://github.com/sPHENIX-Collaboration/Singularity), source sPHENIX setup, and run [`setup.sh`](https://github.com/sPHENIX-Collaboration/QA-gallery/blob/QA-calorimeter-single-particle/setup.sh) to start the sPHENIX [JupyterLab webserver interface](https://jupyterlab.readthedocs.io/). 
 
 ![JupyterLab screenshot](material/JupyterLab-screenshot.png)
+
+4. Last step, before making a [pull request](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request), please execute the "Edit/clear all output" command in JupyterLab. It will clear out output and all for a clean git diff for the pull request
