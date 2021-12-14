@@ -33,4 +33,12 @@ jobs:
           target_branch: QA-tracking-high-occupancy
           github_token: ${{ github.token }}
 
+      - name: Merge QA-tracking-low-occupancy -> QA-tracking-pythiajet
+        uses: devmasx/merge-branch@v1.3.1
+        with:
+          type: now
+          from_branch: QA-tracking-low-occupancy
+          target_branch: QA-tracking-pythiajet
+          github_token: ${{ github.token }}
+
 
