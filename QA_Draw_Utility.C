@@ -501,7 +501,7 @@ void DrawReference(TGraph *hnew, TGraph *href, bool draw_href_error = true)
 
 //! Fit for resolution of TH2F
 TGraphErrors *
-FitResolution(const TH2F *h2, const bool normalize_mean = true)
+FitResolution(const TH2F *h2, const bool normalize_mean = true, const int param = 2)
 {
   TProfile *p2 = h2->ProfileX();
 
@@ -534,8 +534,8 @@ FitResolution(const TH2F *h2, const bool normalize_mean = true)
 
     const double norm = normalize_mean ? fgaus.GetParameter(1) : 1;
 
-    y[n] = fgaus.GetParameter(2) / norm;
-    ey[n] = fgaus.GetParError(2) / norm;
+    y[n] = fgaus.GetParameter(param) / norm;
+    ey[n] = fgaus.GetParError(param) / norm;
 
     n++;
     delete h1;
