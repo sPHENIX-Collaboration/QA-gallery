@@ -29,7 +29,7 @@ if [ $build_ret -ne 0 ]; then
 	echo "${nbname}: Failed build with return = ${build_ret}. Try again....";
 	echo "======================================================="
 	
-	timeout 5m jupyter nbconvert --to notebook --inplace --execute --ExecutePreprocessor.kernel_name=python $nbname
+	timeout --preserve-status --signal=9 5m jupyter nbconvert --to notebook --inplace --execute --ExecutePreprocessor.kernel_name=python $nbname
 	
 	build_ret=$? 
 	if [ $build_ret -ne 0 ]; then
