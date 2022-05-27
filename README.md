@@ -9,6 +9,7 @@ The `main` branch carries common macros and utilities. And each QA plot setup is
 * [`QA-calorimeter-single-particle` branch](https://github.com/sPHENIX-Collaboration/QA-gallery/tree/QA-calorimeter-single-particle ) : Full detector Calorimeter QA for single particles, designed to plot QA file from https://github.com/sPHENIX-Collaboration/macros/tree/QA-calorimeter-single-particle/detectors/sPHENIX
 * [`QA-tracking-low-occupancy` branch](https://github.com/sPHENIX-Collaboration/QA-gallery/tree/QA-tracking-low-occupancy ) : Tracking QA for low occupancy, designed to plot QA file from https://github.com/sPHENIX-Collaboration/macros/tree/QA-tracking-low-occupancy/detectors/sPHENIX
 * [`QA-tracking-high-occupancy` branch](https://github.com/sPHENIX-Collaboration/QA-gallery/tree/QA-tracking-high-occupancy ) : Tracking QA for high occupancy, designed to plot QA file from https://github.com/sPHENIX-Collaboration/macros/tree/QA-tracking-high-occupancy/detectors/sPHENIX
+* [`QA-tracking-pythiajet` branch](https://github.com/sPHENIX-Collaboration/QA-gallery/tree/QA-tracking-pythiajet ) : Pythia D0-jet events with a Upsilon embedding, designed to plot QA file from https://github.com/sPHENIX-Collaboration/macros/tree/QA-tracking-pythiajet/detectors/sPHENIX
 
 The plotting branches are automatically synced with the `main` branch via GitHub actions. 
 
