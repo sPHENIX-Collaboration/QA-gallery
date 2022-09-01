@@ -158,7 +158,7 @@ TCanvas *  KSTestSummary::make_summary_TCanvas()
     
     TCanvas *c1 = new TCanvas(TString("Summary") ,
                             TString("Summary") ,
-                            1024, 600);
+                            950, 600);
     c1->Divide(2, 1);
     int idx = 1;
     TPad *p;
