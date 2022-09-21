@@ -473,7 +473,7 @@ void DrawReference(TGraph *hnew, TGraph *href, bool draw_href_error = true)
       href->Draw("HIST same");
     hnew->Draw("p e");  // over lay data points
   }
-
+  
   // ---------------------------------
   // now, make summary header
   // ---------------------------------
@@ -684,6 +684,39 @@ void PutInputFileName(TCanvas *c1, const double height, const char *new_file_nam
     t->SetTextSize(.4);
     t->Draw();
   }
+}
+
+//! GraphError to CSV
+void SaveGraphError2CSV(TGraph* ge, const std::string & csv_name_base)
+{
+  if (not ge) return;
+
+  std::stringstream sheader, sdata_err, sdata_center;
+
+  for (int bin = 0; bin<ge->GetN(); ++bin)
+  {
+    sheader <<std::setprecision(3) << ge->GetX()[bin] - ge->GetEX()[bin]<<" - "<< ge->GetX()[bin] + ge->GetEX()[bin];
+
+    sdata_center << ge->GetY()[bin] ;
+    sdata_err << ge->GetEY()[bin] ;
+
+    if (bin<ge->GetN()-1) 
+    {
+      sheader<<", ";
+      sdata_center<<", ";
+      sdata_err<<", ";
+    }
+
+  }
+  
+  std::ofstream outfile;
+  outfile.open(csv_name_base + "_centeral_value.csv");
+  outfile << sheader.str() << std::endl<<sdata_center.str() << std::endl;
+  outfile.close();
+  outfile.open(csv_name_base + "_errorbar.csv");
+  outfile << sheader.str() << std::endl<<sdata_err.str() << std::endl;
+  outfile.close();
+
 }
 
 #endif
