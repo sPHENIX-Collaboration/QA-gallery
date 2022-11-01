@@ -15,9 +15,9 @@ echo "Install local jupyterlab"
 echo "-------------------------------------"
 
 pip install --upgrade pip
-# pip install wheel
-# pip install jupyterlab ipywidgets
-pip install -r requirements.txt
+pip install wheel
+pip install jupyterlab ipywidgets
+# pip install -r requirements.txt
 
 pip freeze
  
