@@ -7,8 +7,8 @@ python --version
 # echo "Install virtual env ./env"
 # echo "-------------------------------------"
 
-# python -m venv ./env
-# source ./env/bin/activate 
+python -m venv ./env
+source ./env/bin/activate 
 
 # echo "-------------------------------------"
 # echo "Install local jupyterlab"
