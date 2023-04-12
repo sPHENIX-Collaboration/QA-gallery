@@ -500,46 +500,34 @@ void DrawReference(TGraph *hnew, TGraph *href, bool draw_href_error = true)
 //! Fit for resolution of TH2F
 TGraphErrors *
 FitResolution(const TH2F *h2, const bool normalize_mean = true, const int param = 2)
-{
-  TProfile *p2 = h2->ProfileX();
-
-  int n = 0;
-  double x[1000];
-  double ex[1000];
-  double y[1000];
-  double ey[1000];
+{ 
+  std::unique_ptr<TProfile> p2(h2->ProfileX());
+  std::vector<double> x;
+  std::vector<double> y;
+  std::vector<double> ey;
 
   for (int i = 1; i <= h2->GetNbinsX(); i++)
   {
-    TH1D *h1 = h2->ProjectionY(Form("htmp_%d", rand()), i, i);
+    std::unique_ptr<TH1D> h1(h2->ProjectionY(Form("htmp_%d", rand()), i, i));
 
-    if (h1->GetSum() < 10)
-      continue;
+    // skip if too few entries
+    if (h1->GetSum() < 10) continue;
 
-    TF1 fgaus("fgaus", "gaus", -p2->GetBinError(i) * 4,
-              p2->GetBinError(i) * 4);
-
-    TF1 f2(Form("dgaus"), "gaus + [3]*exp(-0.5*((x-[1])/[4])**2) + [5]",
-           -p2->GetBinError(i) * 4, p2->GetBinError(i) * 4);
-
+    TF1 fgaus("fgaus", "gaus", -p2->GetBinError(i) * 4, p2->GetBinError(i) * 4);
     fgaus.SetParameter(1, p2->GetBinContent(i));
     fgaus.SetParameter(2, p2->GetBinError(i));
 
     h1->Fit(&fgaus, "MQ0");
 
-    x[n] = p2->GetBinCenter(i);
-    ex[n] = (p2->GetBinCenter(2) - p2->GetBinCenter(1)) / 2;
+    x.push_back( p2->GetBinCenter(i) );
 
     const double norm = normalize_mean ? fgaus.GetParameter(1) : 1;
 
-    y[n] = fgaus.GetParameter(param) / norm;
-    ey[n] = fgaus.GetParError(param) / norm;
-
-    n++;
-    delete h1;
+    y.push_back( fgaus.GetParameter(param) / norm );
+    ey.push_back( fgaus.GetParError(param) / norm );
   }
 
-  TGraphErrors *ge = new TGraphErrors(n, x, y, 0, ey);
+  auto ge = new TGraphErrors(x.size(), &x[0], &y[0], nullptr, &ey[0]);
   ge->SetName(TString(h2->GetName()) + "_FitResolution");
 
   ge->SetLineColor(kBlue + 3);
@@ -550,60 +538,60 @@ FitResolution(const TH2F *h2, const bool normalize_mean = true, const int param 
   return ge;
 }
 
-//! Fit for profile along the Y direction of TH2F
-TGraphErrors *
-FitProfile(const TH2 *h2)
-{
-  TProfile *p2 = h2->ProfileX();
-
-  int n = 0;
-  double x[1000];
-  double ex[1000];
-  double y[1000];
-  double ey[1000];
-
+//! Fit for resolution of TH2F
+TH1*
+FitResolution_hist(const TH2F *h2, const bool normalize_mean = true, const int param = 2)
+{ 
+  std::unique_ptr<TProfile> p2(h2->ProfileX());
+  TH1* hout = new TH1F( TString(h2->GetName())+"_FitResolution", "", h2->GetNbinsX(), h2->GetXaxis()->GetXmin(), h2->GetXaxis()->GetXmax() );
+  
   for (int i = 1; i <= h2->GetNbinsX(); i++)
   {
-    TH1D *h1 = h2->ProjectionY(Form("htmp_%d", rand()), i, i);
+    std::unique_ptr<TH1D> h1(h2->ProjectionY(Form("htmp_%d", rand()), i, i));
 
-    if (h1->GetSum() < 10)
-      continue;
+    // skip if too few entries
+    if (h1->GetSum() < 10) continue;
 
-    TF1 fgaus("fgaus", "gaus", -p2->GetBinError(i) * 4,
-              p2->GetBinError(i) * 4);
-
-    TF1 f2(Form("dgaus"), "gaus + [3]*exp(-0.5*((x-[1])/[4])**2) + [5]",
-           -p2->GetBinError(i) * 4, p2->GetBinError(i) * 4);
-
+    TF1 fgaus("fgaus", "gaus", -p2->GetBinError(i) * 4, p2->GetBinError(i) * 4);
     fgaus.SetParameter(1, p2->GetBinContent(i));
     fgaus.SetParameter(2, p2->GetBinError(i));
 
     h1->Fit(&fgaus, "MQ0");
 
-    //      f2.SetParameters(fgaus.GetParameter(0) / 2, fgaus.GetParameter(1),
-    //          fgaus.GetParameter(2), fgaus.GetParameter(0) / 2,
-    //          fgaus.GetParameter(2) / 4, 0);
-    //
-    //      h1->Fit(&f2, "MQ0");
+    const double norm = normalize_mean ? fgaus.GetParameter(1) : 1;
+    hout->SetBinContent( i, fgaus.GetParameter(param) / norm );
+    hout->SetBinError( i, fgaus.GetParError(param) / norm );
+  }
+  return hout;
+}
 
-    //      new TCanvas;
-    //      h1->Draw();
-    //      fgaus.Draw("same");
-    //      break;
+//! Fit for profile along the x direction of TH2F
+TGraphErrors*
+FitProfile(const TH2 *h2)
+{
+  std::unique_ptr<TProfile> p2( h2->ProfileX() );
+  std::vector<double> x;
+  std::vector<double> ex;
+  std::vector<double> y;
+  std::vector<double> ey;
 
-    x[n] = p2->GetBinCenter(i);
-    ex[n] = p2->GetBinWidth(i) / 2;
-    y[n] = fgaus.GetParameter(1);
-    ey[n] = fgaus.GetParameter(2);
+  for (int i = 1; i <= h2->GetNbinsX(); i++)
+  {
+    std::unique_ptr<TH1D> h1( h2->ProjectionY(Form("htmp_%d", rand()), i, i) );
+    if (h1->GetSum() < 10) continue;
 
-    //      p2->SetBinContent(i, fgaus.GetParameter(1));
-    //      p2->SetBinError(i, fgaus.GetParameter(2));
+    TF1 fgaus("fgaus", "gaus", -p2->GetBinError(i) * 4, p2->GetBinError(i) * 4);
+    fgaus.SetParameter(1, p2->GetBinContent(i));
+    fgaus.SetParameter(2, p2->GetBinError(i));
+    h1->Fit(&fgaus, "MQ0");
 
-    n++;
-    delete h1;
+    x.push_back(p2->GetBinCenter(i));
+    ex.push_back(p2->GetBinWidth(i)/2);
+    y.push_back(fgaus.GetParameter(1));
+    ey.push_back(fgaus.GetParameter(2));
   }
 
-  TGraphErrors *ge = new TGraphErrors(n, x, y, ex, ey);
+  TGraphErrors *ge = new TGraphErrors(x.size(), &x[0], &y[0], &ex[0], &ey[0]);
   ge->SetName(TString(h2->GetName()) + "_FitProfile");
   ge->SetLineColor(kBlue + 3);
   ge->SetMarkerColor(kBlue + 3);
