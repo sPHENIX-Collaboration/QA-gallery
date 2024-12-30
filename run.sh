@@ -42,6 +42,6 @@ if [ $build_ret -ne 0 ]; then
 	fi
 fi
 
-jupyter nbconvert --to html $nbname
+# jupyter nbconvert --to html $nbname
 
 
