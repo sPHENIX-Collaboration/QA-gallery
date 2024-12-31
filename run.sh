@@ -42,6 +42,7 @@ if [ $build_ret -ne 0 ]; then
 	fi
 fi
 
+touch dummy.html
 # jupyter nbconvert --to html $nbname
 
 
