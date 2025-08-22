@@ -7,9 +7,18 @@ fi
 
 nbname=$1;
 
+echo "Python check"
+echo "-------------------------"
+
+which python
+python --version
+pip show nbclient nbconvert jupyter_core
+
+
 echo '-------------------------'
 echo 'jupyter env check'
 echo '-------------------------'
+
 
 jupyter --version
 
