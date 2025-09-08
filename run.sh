@@ -28,8 +28,8 @@ echo '-------------------------'
 echo "Processing $nbname"
 echo '-------------------------'
 
-echo jupyter nbconvert --to notebook --inplace --execute --ExecutePreprocessor.kernel_name=python $nbname
-jupyter nbconvert --to notebook --inplace --execute --ExecutePreprocessor.kernel_name=python $nbname
+echo jupyter nbconvert --to notebook --inplace --execute --ExecutePreprocessor.kernel_name=python3 $nbname --debug
+jupyter nbconvert --to notebook --inplace --execute --ExecutePreprocessor.kernel_name=python3 $nbname --debug
 
 build_ret=$? 
 if [ $build_ret -ne 0 ]; then
